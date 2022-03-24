@@ -56,3 +56,56 @@ m1_df = 173 - 2
 ```
 
     ## [1] 0
+
+``` r
+# Poisson model M2
+m2 <- glm(
+  Sa ~ W + Wt,
+  family = poisson(link = log),
+  data = crab)
+
+summary(m2)
+```
+
+    ## 
+    ## Call:
+    ## glm(formula = Sa ~ W + Wt, family = poisson(link = log), data = crab)
+    ## 
+    ## Deviance Residuals: 
+    ##     Min       1Q   Median       3Q      Max  
+    ## -2.9308  -1.9705  -0.5481   0.9700   4.9905  
+    ## 
+    ## Coefficients:
+    ##             Estimate Std. Error z value Pr(>|z|)   
+    ## (Intercept) -1.29168    0.89929  -1.436  0.15091   
+    ## W            0.04590    0.04677   0.981  0.32640   
+    ## Wt           0.44744    0.15864   2.820  0.00479 **
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## (Dispersion parameter for poisson family taken to be 1)
+    ## 
+    ##     Null deviance: 632.79  on 172  degrees of freedom
+    ## Residual deviance: 559.89  on 170  degrees of freedom
+    ## AIC: 921.18
+    ## 
+    ## Number of Fisher Scoring iterations: 6
+
+``` r
+# Goodness of fit
+# Deviance
+m2_D = sum(residuals(m2, type = "deviance") ^ 2)
+
+# Pearson chi-square
+m2_G = sum(residuals(m2, type = "pearson") ^ 2)
+
+m2_df = 173 - 3
+
+1 - pchisq(m2_D, m2_df)
+```
+
+    ## [1] 0
+
+``` r
+# check over-dispersion in M2
+```

@@ -36,3 +36,28 @@ m1_df = 173 - 2
 1 - pchisq(m1_D, m1_df)
 ```
 
+```{r}
+# Poisson model M2
+m2 <- glm(
+  Sa ~ W + Wt,
+  family = poisson(link = log),
+  data = crab)
+
+summary(m2)
+
+# Goodness of fit
+# Deviance
+m2_D = sum(residuals(m2, type = "deviance") ^ 2)
+
+# Pearson chi-square
+m2_G = sum(residuals(m2, type = "pearson") ^ 2)
+
+m2_df = 173 - 3
+
+1 - pchisq(m2_D, m2_df)
+```
+
+```{r}
+# check over-dispersion in M2
+
+```
