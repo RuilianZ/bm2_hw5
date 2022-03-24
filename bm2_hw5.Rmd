@@ -9,3 +9,30 @@ output: github_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+## Question 1
+
+```{r}
+crab = read.table("data/HW5-crab.txt", header = TRUE)
+```
+
+```{r}
+# Poisson model M1
+m1 <- glm(
+  Sa ~ W,
+  family = poisson(link = log),
+  data = crab)
+
+summary(m1)
+
+# Goodness of fit
+# Deviance
+m1_D = sum(residuals(m1, type = "deviance") ^ 2)
+
+# Pearson chi-square
+m1_G = sum(residuals(m1, type = "pearson") ^ 2)
+
+m1_df = 173 - 2
+
+1 - pchisq(m1_D, m1_df)
+```
+
