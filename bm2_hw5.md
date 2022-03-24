@@ -108,4 +108,57 @@ m2_df = 173 - 3
 
 ``` r
 # check over-dispersion in M2
+
+# residual of M2
+m2_res = residuals(m2, type = "pearson")
+
+# over-dispersion parameter
+phi = m2_G / (173 - 3)
+
+# half normal plot
+plot(
+  qnorm((173 + 1:173 + 0.5) / (2 * 173 + 1.125)),
+  sort(abs(m2_res)),
+  xlab='Expected Half-Normal Order Statistics', 
+  ylab='Ordered Absolute Pearson Residuals')
+
+abline(a = 0, b = 1)
+abline(a = 0, b = sqrt(phi), lty = 2)
 ```
+
+![](bm2_hw5_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
+
+``` r
+# fit model with constant over-dispersion
+summary(m2, dispersion = phi)
+```
+
+    ## 
+    ## Call:
+    ## glm(formula = Sa ~ W + Wt, family = poisson(link = log), data = crab)
+    ## 
+    ## Deviance Residuals: 
+    ##     Min       1Q   Median       3Q      Max  
+    ## -2.9308  -1.9705  -0.5481   0.9700   4.9905  
+    ## 
+    ## Coefficients:
+    ##             Estimate Std. Error z value Pr(>|z|)
+    ## (Intercept) -1.29168    1.59771  -0.808    0.419
+    ## W            0.04590    0.08309   0.552    0.581
+    ## Wt           0.44744    0.28184   1.588    0.112
+    ## 
+    ## (Dispersion parameter for poisson family taken to be 3.156449)
+    ## 
+    ##     Null deviance: 632.79  on 172  degrees of freedom
+    ## Residual deviance: 559.89  on 170  degrees of freedom
+    ## AIC: 921.18
+    ## 
+    ## Number of Fisher Scoring iterations: 6
+
+``` r
+# goodness of fit
+p_value = 1 - pchisq(m1_G/phi, 170)
+p_value # fit is ok
+```
+
+    ## [1] 0.4343054

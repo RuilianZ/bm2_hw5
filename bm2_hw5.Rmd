@@ -60,4 +60,26 @@ m2_df = 173 - 3
 ```{r}
 # check over-dispersion in M2
 
+# residual of M2
+m2_res = residuals(m2, type = "pearson")
+
+# over-dispersion parameter
+phi = m2_G / (173 - 3)
+
+# half normal plot
+plot(
+  qnorm((173 + 1:173 + 0.5) / (2 * 173 + 1.125)),
+  sort(abs(m2_res)),
+  xlab='Expected Half-Normal Order Statistics', 
+  ylab='Ordered Absolute Pearson Residuals')
+
+abline(a = 0, b = 1)
+abline(a = 0, b = sqrt(phi), lty = 2)
+
+# fit model with constant over-dispersion
+summary(m2, dispersion = phi)
+
+# goodness of fit
+p_value = 1 - pchisq(m1_G/phi, 170)
+p_value # fit is ok
 ```
