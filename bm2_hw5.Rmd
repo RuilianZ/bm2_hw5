@@ -7,6 +7,8 @@ output: github_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+
+library(pscl) # for count model
 ```
 
 ## Question 1
@@ -80,6 +82,52 @@ abline(a = 0, b = sqrt(phi), lty = 2)
 summary(m2, dispersion = phi)
 
 # goodness of fit
-p_value = 1 - pchisq(m1_G/phi, 170)
-p_value # fit is ok
+p_value = 1 - pchisq(m2_G/phi, 170)
+p_value # fit is good
 ```
+
+
+## Question 2
+
+```{r}
+parasite = read.table("data/HW5-parasite.txt", header = T)
+
+dim(parasite)
+summary(parasite)
+
+# check for categorical variable levels
+unique(parasite$Area)
+unique(parasite$Year)
+
+m3 = glm(
+  Intensity ~ factor(Area) + factor(Year) + Length,
+  family = poisson(link = log), 
+  data = parasite)
+
+summary(m3)
+
+exp(m3$coefficients)
+```
+
+```{r}
+# Goodness of fit
+m3_D = sum(residuals(m3, type = "deviance") ^ 2)
+deviance(m3) # the same
+
+m3_G = sum(residuals(m3, type = "pearson") ^ 2)
+
+pchisq(deviance(m3), df.residual(m3), lower.tail = FALSE)
+```
+
+```{r}
+# zero-inflated model
+m4 =  zeroinfl(
+  Intensity ~ factor(Area) +  factor(Year) + Length, 
+  data = parasite)
+
+summary(m4)
+
+exp(m4$coefficients$count)
+exp(m4$coefficients$zero)
+```
+
